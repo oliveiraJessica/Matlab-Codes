@@ -1,2 +1,2 @@
 # Matlab-Codes
-Miscelanious of matlab projects done basicly in my masters and graduation.
+Miscellaneous of matlab projects done basically in my masters and graduation.
