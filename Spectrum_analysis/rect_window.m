@@ -1,23 +1,14 @@
-function rect_window(N)
-    n = -N :1: N;
+% Makes a rectangular windown with size N
+% Plot its spectrum if plot is 1. Default value is 0
+function w = rect_window(N, varargin)
+   n = -N :1: N;
    w = [zeros(1,floor(N/2)), ones(1,N), zeros(1,ceil(N/2))];
 
-   % 1024 points FFT
-   Y = fft(w,1024);
-   W = fftshift(Y);
-   figure;
-   subplot(3,1,1);
-   stem(w);
-   xlabel('n');
-   ylabel('amplitude');
-   title('Rectangular window' );
-   subplot(3,1,2);
-   plot(abs(W));
-   xlabel('Digital frequency');
-   ylabel('magnitude');
-   subplot(3,1,3);
-   plot(mag2db(abs(W)));
-   xlabel('digital frequency');
-   title('Magnitude spectrum for rectangular window	N')
+   nVars = length(varargin);
 
+if nVars >= 1
+   if varargin{1}== 1
+    spectrum_plot(w,'Linear',1024); 
    end
+end
+end
