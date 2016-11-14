@@ -12,7 +12,7 @@
 % [W, WdB] = spectrum(w,plots,N, infreq) 
 % infreq specifies is the input signal is in frequency domain (infrequ = 1)
 % or in time domain (infreq = 0), default value.
-function varargout = spectrum_plot(w, varargin)
+function varargout = spectrum_plot(w,Fs, varargin)
 
 % Optional arg control
 nVars = length(varargin);
@@ -45,6 +45,7 @@ end
 W = fftshift(Y);
 maxW = max(abs(W));
 WdB = mag2db(abs(W)/maxW);
+f = linspace(-Fs/2,Fs/2,N);
 
 varargout{1} = W;
 varargout{2} = WdB;
@@ -63,21 +64,21 @@ Nplot = Nplot - infreq;
 figure;
 if infreq == 0
     subplot(Nplot,1,1);
-    stem(w);
+    plot(w);
     xlabel('n');
     ylabel('amplitude');
     title('t' );
 end
 
 subplot(Nplot,1,2 - infreq);
-plot(abs(W));
+plot(f,abs(W));
 xlabel('Digital frequency');
 ylabel('magnitude');
 if not(strcmp(plots, op_plots(2)))
     subplot(Nplot,1,3 - infreq);
-    plot(WdB);
+    plot(f,abs(WdB));
     xlabel('digital frequency');
-    ylim([-50 0]);
+    %ylim([-50 0]);
     title('Magnitude spectrum for rectangular window	N')
 end
 

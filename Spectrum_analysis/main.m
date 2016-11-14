@@ -18,21 +18,21 @@
 %Rectangular window
 N = [16,32,41,64];
 for i = 1:length(N)
-    rect_window(N(i),1);
+    rect_window(N(i),1,1);
 end
 
 % Plot the magnitude spectrum on linear and dB scale of a couple 
 % different types of windows. Use the subplot command to put 
 % the plots in the same figure
-windows
+windows(100);
 
-%% 
-
-fs = 128000;
-t = 0:1/fs:0.1;
-f0 = 30000;
+% Windowing example with one tone cos signal
+fs = 128e3;
+t = -length(w)/(2*fs):1/fs:length(w)/(2*fs)-(1/fs);
+f0 = 30e3;
 x = cos(2*pi*f0*t);
-w = rect_window(128,1);
-Y = windowing(x,w);
-% mudar eixo x do plot
-[Y, YdB] = spectrum_plot(Y,'All',1024,1);
+w_vector = windows(128);
+for i=1:size(w_vector,2)
+    y = windowing(x,w_vector(:,i)');
+    [Y, YdB] = spectrum_plot(y,fs,'All',1024,0);
+end
