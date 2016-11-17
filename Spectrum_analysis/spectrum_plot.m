@@ -67,19 +67,19 @@ if infreq == 0
     plot(w);
     xlabel('n');
     ylabel('amplitude');
-    title('t' );
+    title('Time domain');
 end
 
 subplot(Nplot,1,2 - infreq);
 plot(f,abs(W));
 xlabel('Digital frequency');
-ylabel('magnitude');
+ylabel('amplitude spectrum');
 if not(strcmp(plots, op_plots(2)))
     subplot(Nplot,1,3 - infreq);
-    plot(f,abs(WdB));
+    plot(f,WdB);
     xlabel('digital frequency');
-    %ylim([-50 0]);
-    title('Magnitude spectrum for rectangular window	N')
+    ylim([-50 0]);
+    ylabel('dB')
 end
 
 end
