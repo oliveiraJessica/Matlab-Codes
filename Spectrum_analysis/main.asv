@@ -6,7 +6,6 @@
 % - Windowing 
 %%
 
-close all;
 %% Windowing
 % Windowing aplied to anti-aliasing. Limit band to sampling - fs/2
 % Mainlobe width and sidelobes hights are main parameters to measure filter
@@ -37,12 +36,11 @@ for i=1:size(w_vector,2)
     f0 = 30e3;
     x = cos(2*pi*f0*t);
     y = windowing(x,w');
+    [Y, YdB] = spectrum_plot(y,fs,'All',1024,0);
     title('Janelamento - One tone cossine');
-    spectrum_plot(y,fs,'All',1024,0);    
 end
 
 % Windowing example with two tones cossine signal
-% focus only on the Rectangular and Hanning windows
 N = 128;
 w_vector = windows(N); % rect (1), Hannin (3)
 f0 = 30e3;
@@ -50,25 +48,4 @@ fs = 128e3;
 df = 10e3;
 t = -N/(2*fs):1/fs:N/(2*fs)-(1/fs);
 x = cos(2*pi*f0*t) + cos(2*pi*(f0+df)*t);
-spectrum_plot(x,fs,'All',1024,0);
-% Rectangular
-y = windowing(x,w_vector(:,1)');
-spectrum_plot(y,fs,'All',1024,0);
-% Hanning
-y = windowing(x,w_vector(:,3)');
-spectrum_plot(y,fs,'All',1024,0);
-title('Janelamento - Two tone cossine');
-
-% Minimum separation
-% decrease df until you can no longer distinguish two separate frequency
-% components Do this for both windows
-df = 10e3;
-x = cos(2*pi*f0*t) + cos(2*pi*(f0+df)*t);
-spectrum_plot(x,fs,'All',1024,0);
-% Rectangular
-y = windowing(x,w_vector(:,1)');
-spectrum_plot(y,fs,'All',1024,0);
-% Hanning
-y = windowing(x,w_vector(:,3)');
-spectrum_plot(y,fs,'All',1024,0);
-title('Janelamento - Two tone cossine');
+windowing(x,w_vector(1:2:3))

@@ -9,6 +9,7 @@ function w = rect_window(N,Fs, varargin)
 if nVars >= 1
    if varargin{1}== 1
     spectrum_plot(w,Fs,'Linear',1024); 
+    title(['Janela retangular, ', num2str(N)]);
    end
 end
 end
