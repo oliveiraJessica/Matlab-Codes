@@ -1,11 +1,10 @@
-function w = winndows(N)
+function w = windows(N)
     r = rectwin(N); %new boxcar function
     b = bartlett(N);
     h = hanning(N);
     m = hamming(N);
     k = blackman(N);
     w = [r,b,h,m,k];
-
     % Time analysis
     n= [1:N];
     figure;plot(n,w);

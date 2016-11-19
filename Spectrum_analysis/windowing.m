@@ -1,8 +1,10 @@
 % Aplies a window w (time domain) to a given signal x (time domain)
 % A fft of size 1024 is aplied on both x and w, and the results are 
 % multiplied together
-% TODO: make size of fft an optionl parameter
 function y = windowing(x,w)
+% TODO: make size of fft an optional parameter
+%       adapt to accept vectors of w
+
     figure;
     title('Windowing (time domain)');
     subplot(3,1,1);
