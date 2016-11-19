@@ -13,6 +13,7 @@
 % infreq specifies is the input signal is in frequency domain (infrequ = 1)
 % or in time domain (infreq = 0), default value.
 function varargout = spectrum_plot(w,Fs, varargin)
+% TODO: adapt to accept vectors of w
 
 % Optional arg control
 nVars = length(varargin);
@@ -68,18 +69,21 @@ if infreq == 0
     xlabel('n');
     ylabel('amplitude');
     title('Time domain');
+    grid on;
 end
 
 subplot(Nplot,1,2 - infreq);
 plot(f,abs(W));
 xlabel('Digital frequency');
 ylabel('amplitude spectrum');
+grid on;
 if not(strcmp(plots, op_plots(2)))
     subplot(Nplot,1,3 - infreq);
     plot(f,WdB);
     xlabel('digital frequency');
     ylim([-50 0]);
-    ylabel('dB')
+    ylabel('dB');
+    grid on;
 end
 
 end
