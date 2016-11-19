@@ -72,3 +72,29 @@ spectrum_plot(y,fs,'All',1024,0);
 y = windowing(x,w_vector(:,3)');
 spectrum_plot(y,fs,'All',1024,0);
 title('Janelamento - Two tone cossine');
+
+%% Filtering
+% Low pass filter
+N = 41;
+fc = 1/8;
+window_low_pass(N,fc, rectwin(N));
+
+% High pass filter
+% Ref: http://www.labbookpages.co.uk/audio/firWindowing.html
+% all pass - low pass
+N = 61;
+fc = 7/16;
+window_high_pass(N,fc,rectwin(N))
+
+% Band pass
+% high pass - low pass
+% fclp > fchp 
+fc1 = 1/4;
+fc2 = 1/8;
+N = 61;
+h = window_band_pass(N, fc1, fc2, w);
+N = 23;
+h = window_band_pass(N, fc1, fc2, w);
+N = 401;
+h = window_band_pass(N, fc1, fc2, w);
+
