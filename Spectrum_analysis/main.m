@@ -4,6 +4,7 @@
 %%
 % This project contain the following subjects:
 % - Windowing 
+% - FIR and IIR filter implementation by windowing
 %%
 
 close all;
@@ -74,6 +75,7 @@ spectrum_plot(y,fs,'All',1024,0);
 title('Janelamento - Two tone cossine');
 
 %% Filtering
+%% FIR
 % Low pass filter
 N = 41;
 fc = 1/8;
@@ -124,3 +126,40 @@ end
 k = kaiser(ceil(N),beta);
 window_high_pass(ceil(N),fc,k,1);
 title('High pass filter - Kaiser window');
+
+%% IIR
+N = 5;
+fc = 2048; % in Hz
+fs = 8192; % in Hz
+omega_n = (fc/fs)*2*pi;
+Wn =  omega_n/pi;
+Rp = 3; % in dB
+Rs = 50;% in dB
+
+[b, a] = butter(N,Wn);
+p = roots(a);
+z = roots(b);
+plot_z(p,z);
+title('Butterworth pole-zero plot');
+figure;freqz(b,a,1024);
+
+[b, a] = cheby1(N,Rp,Wn);
+p = roots(a);
+z = roots(b);
+plot_z(p,z);
+title('Chebyshev 1 pole-zero plot');
+figure;freqz(b,a,1024);
+
+[b, a] = cheby2(N,Rs,Wn);
+p = roots(a);
+z = roots(b);
+plot_z(p,z);
+title('Chebyshev 2 pole-zero plot');
+figure;freqz(b,a,1024);
+
+[b, a] = ellip(N,Rp,Rs,Wn);
+p = roots(a);
+z = roots(b);
+plot_z(p,z);
+title('Elliptic pole-zero plot');
+figure;freqz(b,a,1024);

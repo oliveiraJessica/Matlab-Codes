@@ -1,18 +1,18 @@
 % Plots the spectrum of the given signal w (time domain).
-% [W, WdB] = spectrum(w) 
+% [W, WdB] = spectrum(w,Fs) 
 % Plots the signal in time domain and its both linear and dB magnitude 
 % in frequency domain
-% [W, WdB] = spectrum(w,plots) 
+% [W, WdB] = spectrum(w,Fs,plots) 
 % Where plots is a string to specify which plots must be shown. 
 % Possibles strings: 'All' and 'Linear'. 'All' is the default value.
 %
-% [W, WdB] = spectrum(w,plots,N) 
+% [W, WdB] = spectrum(w,Fs,plots,N) 
 % N is size of FFT. 1024 is the default value
 %
-% [W, WdB] = spectrum(w,plots,N, infreq) 
-% infreq specifies is the input signal is in frequency domain (infrequ = 1)
+% [W, WdB] = spectrum(w,Fs,plots,N, infreq) 
+% infreq specifies is the input signal is in frequency domain (infreq = 1)
 % or in time domain (infreq = 0), default value.
-function varargout = spectrum_plot(w,Fs, varargin)
+function varargout = spectrum_plot(w,Fs,varargin)
 % TODO: adapt to accept vectors of w
 
 % Optional arg control
