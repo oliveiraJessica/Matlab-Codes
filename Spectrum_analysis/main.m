@@ -77,24 +77,50 @@ title('Janelamento - Two tone cossine');
 % Low pass filter
 N = 41;
 fc = 1/8;
-window_low_pass(N,fc, rectwin(N));
+window_low_pass(N,fc, rectwin(N),1);
+title('Low pass filter');
 
 % High pass filter
 % Ref: http://www.labbookpages.co.uk/audio/firWindowing.html
 % all pass - low pass
 N = 61;
 fc = 7/16;
-window_high_pass(N,fc,rectwin(N))
+window_high_pass(N,fc,rectwin(N),1)
+title('High pass filter');
 
 % Band pass
 % high pass - low pass
 % fclp > fchp 
-fc1 = 1/4;
-fc2 = 1/8;
+fc1 = 1/8;
+fc2 = 1/4;
 N = 61;
-h = window_band_pass(N, fc1, fc2, w);
+w = rectwin(N);
+h = window_band_pass(N, fc1, fc2, w,1);
+title('Band pass filter - 61');
 N = 23;
-h = window_band_pass(N, fc1, fc2, w);
+w = rectwin(N);
+h = window_band_pass(N, fc1, fc2, w,1);
+title('Band pass filter - 23');
 N = 401;
-h = window_band_pass(N, fc1, fc2, w);
+w = rectwin(N);
+h = window_band_pass(N, fc1, fc2, w,1);
+title('Band pass filter - 401');
 
+% Kaiser
+delta = linspace(0.0001,0.1,L);
+delta_omega = 0.1;
+[N, beta] = KaiserParam(delta, delta_omega);
+figure; plot(beta, delta);
+
+N = 61;
+fc = 7/16;
+beta = [2,6,9];
+for i = 1:length(beta)
+    window_high_pass(N,fc,kaiser(N,beta(i)),1);
+    title('High pass filter - Kaiser window');
+end
+
+[N, beta] = KaiserParam(0.01, pi/10);
+k = kaiser(ceil(N),beta);
+window_high_pass(ceil(N),fc,k,1);
+title('High pass filter - Kaiser window');
