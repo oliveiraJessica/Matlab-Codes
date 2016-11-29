@@ -3,8 +3,8 @@
 % fc: cut frequence, in Hz
 % w: window used to build the filter. It must be of size N
 function h = window_low_pass(N, fc, w, varargin) 
-    n = 0:N-1;   
-    lp = 2*fc.*sinc((n-ceil(N/2))*(2*fc));
+    n = 1:N;   
+    lp = 2*fc.*sinc((n-ceil(N/2)).*(2*fc));
     b = w;
     h = lp(:).*b(:);
     plot = 0;

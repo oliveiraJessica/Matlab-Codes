@@ -4,8 +4,8 @@
 % fc2: rigth cut frequence, in Hz. It must be greater than fc2
 % w: window used to build the filter. It must be of size N
 function h = window_band_pass(N, fc1, fc2, w, varargin)
-    hlp = window_low_pass(N,fc2,w);
-    hhp = window_high_pass(N,fc1,w);
+    hlp = window_low_pass(N,fc2,w,0);
+    hhp = window_high_pass(N,fc1,w,0);
     h = hhp - hlp';
     plot = 0;
     if not(isempty(varargin))

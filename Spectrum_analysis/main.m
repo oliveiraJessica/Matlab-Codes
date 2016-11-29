@@ -31,6 +31,7 @@ windows(100);
 % Windowing example with one tone cos signal
 N = 128;
 w_vector = windows(N);
+windows_names = {'Retangular'; 'Bartlett'; 'Hanning'; 'Hamming'; 'Blackman'};
 for i=1:size(w_vector,2)
     w = w_vector(:,i);
     fs = 128e3;
@@ -38,7 +39,7 @@ for i=1:size(w_vector,2)
     f0 = 30e3;
     x = cos(2*pi*f0*t);
     y = windowing(x,w');
-    title('Janelamento - One tone cossine');
+    title(['Windowing - One tone cossine - ', windows_names{i}]);
     spectrum_plot(y,fs,'All',1024,0);    
 end
 
@@ -52,43 +53,53 @@ df = 10e3;
 t = -N/(2*fs):1/fs:N/(2*fs)-(1/fs);
 x = cos(2*pi*f0*t) + cos(2*pi*(f0+df)*t);
 spectrum_plot(x,fs,'All',1024,0);
-% Rectangular
+%%%% Rectangular
 y = windowing(x,w_vector(:,1)');
 spectrum_plot(y,fs,'All',1024,0);
-% Hanning
+
+%%%% Hanning
 y = windowing(x,w_vector(:,3)');
 spectrum_plot(y,fs,'All',1024,0);
-title('Janelamento - Two tone cossine');
+title('Windowing - Two tone cossine - Hanning');
 
 % Minimum separation
 % decrease df until you can no longer distinguish two separate frequency
 % components Do this for both windows
-df = 10e3;
+df = 2e3;
 x = cos(2*pi*f0*t) + cos(2*pi*(f0+df)*t);
 spectrum_plot(x,fs,'All',1024,0);
 % Rectangular
 y = windowing(x,w_vector(:,1)');
 spectrum_plot(y,fs,'All',1024,0);
+title(['Windowing - Retangular - df = ', num2str(df), 'Hz']);
 % Hanning
 y = windowing(x,w_vector(:,3)');
 spectrum_plot(y,fs,'All',1024,0);
-title('Janelamento - Two tone cossine');
+title(['Windowing - Hanning - df = ', num2str(df), 'Hz']);
 
 %% Filtering
-%% FIR
+%% FIR Designed by Windowing
 % Low pass filter
 N = 41;
 fc = 1/8;
-window_low_pass(N,fc, rectwin(N),1);
-title('Low pass filter');
+windows_names = {'Retangular'; 'Bartlett'; 'Hanning'; 'Hamming'; 'Blackman'};
+w_vector = windows(N);
+for i=1:size(w_vector,2)
+    window_low_pass(N,fc, rectwin(N),1);
+    title(['FIR - Low Pass - ', windows_names{i}]);
+end
 
 % High pass filter
 % Ref: http://www.labbookpages.co.uk/audio/firWindowing.html
 % all pass - low pass
 N = 61;
 fc = 7/16;
-window_high_pass(N,fc,rectwin(N),1)
-title('High pass filter');
+windows_names = {'Retangular'; 'Bartlett'; 'Hanning'; 'Hamming'; 'Blackman'};
+w_vector = windows(N);
+for i=1:size(w_vector,2)
+    window_high_pass(N,fc,w_vector(:,i),1)   
+    title(['FIR - High Pass - ', windows_names{i}]);
+end
 
 % Band pass
 % high pass - low pass
@@ -96,37 +107,48 @@ title('High pass filter');
 fc1 = 1/8;
 fc2 = 1/4;
 N = 61;
-w = rectwin(N);
+w = hamming(N);
 h = window_band_pass(N, fc1, fc2, w,1);
-title('Band pass filter - 61');
+title('Band pass filter - Hamming - N = 61');
 N = 23;
-w = rectwin(N);
+w = hamming(N);
 h = window_band_pass(N, fc1, fc2, w,1);
-title('Band pass filter - 23');
+title('Band pass filter - Hamming - N = 23');
 N = 401;
-w = rectwin(N);
+w = hamming(N);
 h = window_band_pass(N, fc1, fc2, w,1);
-title('Band pass filter - 401');
+title('Band pass filter - Hamming - N = 401');
 
 % Kaiser
-delta = linspace(0.0001,0.1,L);
+delta = 0.0001:0.001:0.1;
 delta_omega = 0.1;
 [N, beta] = KaiserParam(delta, delta_omega);
-figure; plot(beta, delta);
+figure; plot(delta, beta);
+ylabel('beta');
+xlabel('delta');
+title('beta vs delta');
 
 N = 61;
 fc = 7/16;
 beta = [2,6,9];
 for i = 1:length(beta)
-    window_high_pass(N,fc,kaiser(N,beta(i)),1);
-    title('High pass filter - Kaiser window');
+    window_high_pass(N,fc,transpose(kaiser(N,beta(i)))',1);
+    title(['High pass filter - Kaiser window - ', num2str(beta(i))]);
 end
 
+fc = 7/16;
 [N, beta] = KaiserParam(0.01, pi/10);
-k = kaiser(ceil(N),beta);
-window_high_pass(ceil(N),fc,k,1);
+N = ceil(N);
+k = kaiser(N,beta);
+window_high_pass(N,fc,k,1);
 title('High pass filter - Kaiser window');
 
+windows_names = {'Retangular'; 'Bartlett'; 'Hanning'; 'Hamming'; 'Blackman'};
+w_vector = windows(N);
+for i=1:size(w_vector,2)
+    window_high_pass(N,fc,w_vector(:,i)',1)   
+    title(['FIR - High Pass - ', windows_names{i}]);
+end
 %% IIR
 N = 5;
 fc = 2048; % in Hz
@@ -142,6 +164,7 @@ z = roots(b);
 plot_z(p,z);
 title('Butterworth pole-zero plot');
 figure;freqz(b,a,1024);
+title('Butterworth Magnitude - Phase plot');
 
 [b, a] = cheby1(N,Rp,Wn);
 p = roots(a);
@@ -149,6 +172,7 @@ z = roots(b);
 plot_z(p,z);
 title('Chebyshev 1 pole-zero plot');
 figure;freqz(b,a,1024);
+title('Chebyshev 1 Magnitude - Phase plot');
 
 [b, a] = cheby2(N,Rs,Wn);
 p = roots(a);
@@ -156,6 +180,7 @@ z = roots(b);
 plot_z(p,z);
 title('Chebyshev 2 pole-zero plot');
 figure;freqz(b,a,1024);
+title('Chebyshev 2 Magnitude - Phase plot');
 
 [b, a] = ellip(N,Rp,Rs,Wn);
 p = roots(a);
@@ -163,3 +188,4 @@ z = roots(b);
 plot_z(p,z);
 title('Elliptic pole-zero plot');
 figure;freqz(b,a,1024);
+title('Elliptic Magnitude - Phase plot');

@@ -2,3 +2,6 @@ Spectrum_analysis/main.asv
 Spectrum_analysis/main.asv
 *.asv
 *.asv
+*.png
+*.eps
+*.fig

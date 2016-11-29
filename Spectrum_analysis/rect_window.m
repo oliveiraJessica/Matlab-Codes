@@ -11,8 +11,13 @@ function w = rect_window(N,Fs, varargin)
 
 if nVars >= 1
    if varargin{1}== 1
-    spectrum_plot(w,Fs,'All',1024); 
-    title(['Janela retangular, ', num2str(N)]);
+    [W, Wb] = spectrum_plot(w,Fs,'All',1024);      
+    x = floor(3/(2*N)*length(Wb)+length(Wb)/2);
+    max_sidelobe = Wb(floor(3/(2*N)*length(Wb)+length(Wb)/2));    
+    title(['Janela retangular, ', num2str(N)]);    
+    hold on
+    plot(3/(2*N),max_sidelobe, '.r');
+    legend('magnitude', ['max sidelobe (' num2str(max_sidelobe) ')'])
    end
 end
 end
